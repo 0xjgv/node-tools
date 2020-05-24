@@ -14,7 +14,7 @@ export PATH="/path/to/this/repo:$PATH"
 
 ### Follow redirects (fredirect)
 `cat urls.txt | fredirect`
-[]
+
 `fredirect URL`
 
 ### Have I been pwned?
