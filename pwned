@@ -9,14 +9,13 @@ async function isPwned(email) {
   try {
     browser = await puppeteer.launch();
     const url = `https://haveibeenpwned.com/unifiedsearch/${email}`;
-    console.log("Checking", email)
     const [page] = await browser.pages();
     await page.setUserAgent(platform);
     const response = await page.goto(url);
     const { Breaches } = await response.json();
     return Breaches;
   } catch(error) {
-    console.log(error);
+    // console.log(error);
     return [];
   } finally {
     if (browser) {
@@ -38,8 +37,9 @@ if (process.stdin.isTTY) {
       if (args.out) {
         const outputFile = /\.json$/.test(args.out) ? args.out : `${args.out}.json`;
         fs.writeFileSync(`./${outputFile}`, JSON.stringify(result, null, 2));
+      } else {
+        console.log(result);
       }
-      console.log(result);
     })
     .parse(args);
 } else {
