@@ -1,40 +1,15 @@
 #!/usr/bin/env node
-const puppeteer = require('puppeteer');
-const { URL } = require("url")
+const fetch = require("node-fetch");
+const { URL } = require("url");
 const fs = require("fs");
 
-const platform = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36';
 const div = "\n";
 
 async function followRedirects(url, display = true) {
-  let browser;
-  try {
-    browser = await puppeteer.launch();
-    const [page] = await browser.pages();
-    await page.setRequestInterception(true);
-    const chainRequests = [];
-    page.on('request', request => {
-      const chain = request.redirectChain();
-      const idx = chain.length;
-      if (chainRequests[idx]) {
-        request.abort();
-      } else {
-        const interceptedUrl = request.url();
-        chainRequests[idx] = interceptedUrl;
-        request.continue();
-      }
-    });
-    await page.setUserAgent(platform);
-    await page.goto(url);
-    display && console.log(chainRequests.join(div));
-    return chainRequests;
-  } catch (error) {
-    console.log(error);
-  } finally {
-    if (browser) {
-      await browser.close();
-    }
-  }
+  const data = await fetch(`https://fredirect.now.sh/api/fredirect?url=${url}`)
+    .then(res => res.json());
+  display && console.log(JSON.stringify(data, null, 2));
+  return data
 }
 
 async function fredirect(url, { out } = { out: false }) {
