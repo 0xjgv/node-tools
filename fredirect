@@ -22,8 +22,7 @@ async function fredirect(url, { out } = { out: false }) {
     out && fs.appendFileSync(`${out}.txt`, redirects.join(div) + div);
   } catch (error) {
     console.log(error);
-    const errorMessage = "Please enter a valid url";
-    console.log(errorMessage);
+    console.error("Please enter a valid url");
   }
 }
 
